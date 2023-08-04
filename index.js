@@ -7,12 +7,13 @@ app.use(express.json());
 app.post('/deteccion', (req, res) => {
 
     const { frase } = req.body
+    var esRacista = calculateRacism(frase);
 
     if (!frase) {
         res.status(401).send({message:'missing parameter frase in body request.'});
     }
     res.send({
-        esRacista: calculateRacism(frase),
+        esRacista: esRacista,
         explicacion: 'This is an explanation'
     })
 });
