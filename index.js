@@ -4,10 +4,15 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get('/deteccion', (req, res) => {
+app.post('/deteccion', (req, res) => {
 
-    res.status(200).send({
-        esRacista: calculateRacism(),
+    const { frase } = req.body
+
+    if (!frase) {
+        res.status(401).send({message:'missing parameter frase in body request.'});
+    }
+    res.send({
+        esRacista: calculateRacism(frase),
         explicacion: 'This is an explanation'
     })
 });
@@ -18,6 +23,9 @@ app.listen(PORT, '0.0.0.0',() => {
 
 // Middleware functions
 
-function calculateRacism() {
-    return !Math.round(Math.random());
+function calculateRacism(frase) {
+    if(frase.includes("negro")) {
+        return true;
+    };
+    return false;
 }
