@@ -7,8 +7,8 @@ app.use(express.json());
 app.get('/deteccion', (req, res) => {
 
     res.status(200).send({
-        isItRacist: calculateRacism(),
-        explanation: 'This is an explanation'
+        esRacista: calculateRacism(),
+        explicacion: 'This is an explanation'
     })
 });
 
