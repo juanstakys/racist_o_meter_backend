@@ -24,12 +24,3 @@ app.post('/deteccion', async (req, res) => {
 app.listen(PORT, '0.0.0.0',() => {
     console.log(`Server running on port ${PORT}`);
 });
-
-// Middleware functions
-
-function calculateRacism(statement) {
-    if(statement.includes("black")) {
-        return true;
-    };
-    return false;
-}
