@@ -13,7 +13,7 @@ async function getAIResponse(userInput) {
             messages: [
                 {
                     "role": "system",
-                    "content": "Tell me wheter the following statement is racist or not, and why. Your response must be a json in the format:\n{\n'isItRacist': boolean,\n'explanation': String\n}"
+                    "content": "Tell me wheter the quoted statement is racist or not, and why. Your response must be a json in the format:\n{\n'isItRacist': boolean,\n'explanation': String\n}"
                 },
                 {
                     "role": "user",
@@ -65,7 +65,7 @@ async function getAIResponse(userInput) {
                 },
                 {
                     "role": "user",
-                    "content": userInput
+                    "content": `Is the statement "${userInput}" racist?`
                 }
             ],
             temperature: 1,
