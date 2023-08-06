@@ -6,15 +6,16 @@ app.use(express.json());
 
 app.post('/deteccion', (req, res) => {
 
-    const { frase } = req.body
-    var esRacista = calculateRacism(frase);
+    const { statement } = req.body
+    var esRacista = calculateRacism(statement);
 
-    if (!frase) {
-        res.status(401).send({message:'missing parameter frase in body request.'});
+    if (!statement) {
+        res.status(401).send({message:'missing parameter statement in body request.'});
     }
     res.send({
-        esRacista: esRacista,
-        explicacion: 'This is an explanation'
+        receivedStatement : statement,
+        isItRacist: esRacista,
+        explanation: 'This is an explanation'
     })
 });
 
@@ -24,8 +25,8 @@ app.listen(PORT, '0.0.0.0',() => {
 
 // Middleware functions
 
-function calculateRacism(frase) {
-    if(frase.includes("negro")) {
+function calculateRacism(statement) {
+    if(statement.includes("black")) {
         return true;
     };
     return false;
