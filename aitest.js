@@ -74,16 +74,17 @@ async function getAIResponse(userInput) {
             frequency_penalty: 0,
             presence_penalty: 0,
         });
+        var stringResponse = response.data.choices[0].message.content
         try {
-           var jsonResponse = JSON.parse(response.data.choices[0].message.content)
-           return JSON.parse(response.data.choices[0].message.content);
-        } catch {
+            var jsonResponse = JSON.parse(stringResponse)
+            return jsonResponse;
+        } catch (err) {
             console.log(response.data.choices[0].message.content)
-            throw new Error("Error parsing response from AI")
+            throw new Error(`${err} \n >> Error parsing to JSON response from AI: \n Response: \n ${stringResponse}`)
         }
     } catch (err) {
         console.error(err)
     }
 }
 
-module.exports = {getAIResponse};
+module.exports = { getAIResponse };
