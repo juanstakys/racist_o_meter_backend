@@ -65,7 +65,7 @@ async function getAIResponse(userInput) {
                 },
                 {
                     "role": "user",
-                    "content": `Is the statement "${userInput}" racist?`
+                    "content": `Is the statement "${userInput}" racist? Remember that your response must be a json in the format:\n{\n'isItRacist': boolean,\n'explanation': String\n} i.e. the first parameter can only be true or false.`
                 }
             ],
             temperature: 1,
