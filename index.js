@@ -1,4 +1,4 @@
-const { getAIResponse } = require('./aitest.js')
+const { getAIResponse } = require('./gpt_functions.js')
 const express = require('express');
 const app = express();
 const PORT = 8080;
