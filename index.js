@@ -5,7 +5,7 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.post('/deteccion', async (req, res) => {
+app.post('/detection', async (req, res) => {
 
     const { statement } = req.body
 
