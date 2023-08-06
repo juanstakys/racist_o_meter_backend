@@ -1,6 +1,6 @@
 # racist_o_meter_backend
 
-Backend for [the mobile app](https://github.com/juanstakys/racist_o_meter) based on [this video](https://www.youtube.com/shorts/XosEdKikOAc)
+Backend for [the mobile app](https://github.com/juanstakys/racist_o_meter) based on [this video](https://www.youtube.com/shorts/XosEdKikOAc).
 
 ## Idea
 Detect racism and hateful speech using OpenAI's ChatGPT
