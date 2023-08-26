@@ -13,11 +13,14 @@ app.post('/detection', async (req, res) => {
         res.status(400).send({message:'missing parameter statement in body request.'});
     } else {
         var {isItRacist, explanation} = await getAIResponse(statement);
-        res.send({
+        let result = {
             receivedStatement : statement,
             isItRacist: isItRacist,
             explanation: explanation
-        })
+        }
+        res.send(result);
+        console.log("GPT response at " + new Date().toISOString() + ":")
+        console.log(result);
     }
 });
 
