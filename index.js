@@ -1,8 +1,10 @@
-const { getAIResponse } = require('./gpt_functions.js')
+const { getAIResponse } = require('./gpt_functions.js');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const PORT = 8080;
 
+app.use(cors());
 app.use(express.json());
 
 app.post('/detection', async (req, res) => {
