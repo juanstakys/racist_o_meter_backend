@@ -1,4 +1,4 @@
 /node_modules
 
 .env
-atkas_uri.js
+atlas_uri.js
