@@ -1,3 +1,4 @@
 /node_modules
 
 .env
+atkas_uri.js
