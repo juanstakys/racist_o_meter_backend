@@ -9,10 +9,12 @@ const PORT = 8080;
 // Mongo database connection
 const mongo_uri = require('./atlas_uri.js');
 const client = new MongoClient(mongo_uri);
-const dbname = "racist-o-meter"
+const dbname = "racist-o-meter";
+const collection_name = "generated_answers";
+const dbCollection = client.db(dbname).collection(collection_name)
 
 const connectToDatabase = async () => {
-    try{
+    try {
         await client.connect();
         console.log(`Successfully connected to the ${dbname} database`);
     } catch (err) {
@@ -20,10 +22,29 @@ const connectToDatabase = async () => {
     }
 }
 
-const main = async () => {
+// Checks if the received statement is already in the database
+const checkDatabase = async (statement) => {
     try {
+        // Formats statement removing spaces and making all lowercase, to avoid redundancies in the DB.
+        const formattedStatement = statement.toLowerCase().replace(/\s/g, '');
+        console.log(formattedStatement);
+        const statementQuery = {
+            statement: formattedStatement
+        }
+
         await connectToDatabase();
-        
+        const queryResult = await dbCollection.findOne(statementQuery);
+        if (queryResult) {
+            console.log(queryResult);
+            return {
+                receivedStatement: statement,
+                isItRacist: queryResult.isItRacist,
+                explanation: queryResult.explanation
+            }
+        } else {
+            console.log(`No results for the query: '${statement}', asking Chat-GPT...`);
+            return null;
+        }
     } catch (err) {
         console.error(`Error connecting to the database: ${err}`);
     } finally {
@@ -31,7 +52,6 @@ const main = async () => {
     }
 }
 
-main()
 
 // Express
 app.use(cors());
@@ -42,11 +62,18 @@ app.post('/detection', async (req, res) => {
     const { statement } = req.body
 
     if (!statement) {
-        res.status(400).send({message:'missing parameter statement in body request.'});
+        res.status(400).send({ message: 'missing parameter statement in body request.' });
     } else {
-        var {isItRacist, explanation} = await getAIResponse(statement);
-        let result = {
-            receivedStatement : statement,
+        const db_result = await checkDatabase(statement);
+        console.log(db_result);
+        if (db_result != null) {
+            const result = db_result;
+            res.send(result);
+            return
+        }
+        const { isItRacist, explanation } = await getAIResponse(statement);
+        const result = {
+            receivedStatement: statement,
             isItRacist: isItRacist,
             explanation: explanation
         }
@@ -56,6 +83,6 @@ app.post('/detection', async (req, res) => {
     }
 });
 
-app.listen(PORT, '0.0.0.0',() => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
