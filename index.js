@@ -29,10 +29,9 @@ const checkDatabase = async (statement) => {
         const formattedStatement = statement.toLowerCase().replace(/\s/g, '');
         console.log(formattedStatement);
         const statementQuery = {
-            statement: formattedStatement
+            receivedStatement: formattedStatement
         }
-
-        await connectToDatabase();
+        
         const queryResult = await dbCollection.findOne(statementQuery);
         if (queryResult) {
             console.log(queryResult);
@@ -46,19 +45,28 @@ const checkDatabase = async (statement) => {
             return null;
         }
     } catch (err) {
-        console.error(`Error connecting to the database: ${err}`);
-    } finally {
-        await client.close();
+        console.error(`Error checking database: ${err}`);
     }
 }
 
+// Uploads new response to the database
+const uploadResponse = async (result) => {
+    try{
+        console.log("Uploading answer...");
+        await dbCollection.insertOne(result);
+    } catch (err) {
+        console.error(`Error uploading to database: ${err}`);
+    }
+}
+
+connectToDatabase();
 
 // Express
 app.use(cors());
 app.use(express.json());
 
 app.post('/detection', async (req, res) => {
-
+    
     const { statement } = req.body
 
     if (!statement) {
@@ -73,10 +81,11 @@ app.post('/detection', async (req, res) => {
         }
         const { isItRacist, explanation } = await getAIResponse(statement);
         const result = {
-            receivedStatement: statement,
+            receivedStatement: statement.toLowerCase().replace(/\s/g, ''),
             isItRacist: isItRacist,
             explanation: explanation
         }
+        await uploadResponse(result);
         res.send(result);
         console.log("GPT response at " + new Date().toISOString() + ":")
         console.log(result);
